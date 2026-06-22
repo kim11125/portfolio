@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>김정현 | Backend · Fullstack Developer</title>
+<style>
+:root {
+  --bg:      #080c18;
+  --bg2:     #0f1523;
+  --bg3:     #161d2e;
+  --card:    #141828;
+  --border:  #1e2a40;
+  --accent:  #00d4aa;
+  --accent2: #6366f1;
+  --accent3: #f59e0b;
+  --text:    #e2e8f0;
+  --text2:   #94a3b8;
+  --text3:   #64748b;
+  --radius:  12px;
+  --shadow:  0 4px 32px rgba(0,0,0,0.5);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+
+/* ─── NAV ─────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:rgba(8,12,24,0.88);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;height:60px;
+}
+.nav-logo{
+  font-size:1rem;font-weight:800;color:var(--accent);
+  text-decoration:none;letter-spacing:-0.5px;
+}
+.nav-links{display:flex;gap:0.15rem;list-style:none}
+.nav-links a{
+  color:var(--text2);text-decoration:none;font-size:0.85rem;
+  padding:0.4rem 0.8rem;border-radius:7px;transition:all 0.2s;
+}
+.nav-links a:hover,.nav-links a.active{
+  color:var(--accent);background:rgba(0,212,170,0.09);
+}
+.hamburger{
+  display:none;flex-direction:column;gap:5px;
+  cursor:pointer;background:none;border:none;padding:4px;
+}
+.hamburger span{
+  display:block;width:22px;height:2px;
+  background:var(--text2);border-radius:2px;transition:0.3s;
+}
+
+/* ─── HERO ────────────────────────────── */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding:100px 2rem 60px;position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 75% 50%,rgba(0,212,170,0.07) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 70% at 15% 30%,rgba(99,102,241,0.06) 0%,transparent 60%),
+    radial-gradient(ellipse 30% 30% at 90% 10%,rgba(245,158,11,0.04) 0%,transparent 50%);
+}
+.hero-content{max-width:780px;position:relative}
+
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,212,170,0.1);border:1px solid rgba(0,212,170,0.25);
+  color:var(--accent);font-size:0.78rem;font-weight:600;
+  padding:0.3rem 0.9rem;border-radius:99px;margin-bottom:1.5rem;
+}
+.hero-badge::before{
+  content:'';width:7px;height:7px;background:var(--accent);
+  border-radius:50%;animation:blink 2s infinite;
+}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.75)}}
+
+.hero-name{
+  font-size:clamp(2.4rem,5.5vw,3.8rem);
+  font-weight:900;letter-spacing:-1.5px;line-height:1.08;margin-bottom:0.6rem;
+}
+.hero-name span{
+  background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-title{font-size:clamp(1rem,2.2vw,1.2rem);color:var(--text2);margin-bottom:1.25rem;line-height:1.6}
+.hero-desc{
+  font-size:0.975rem;color:var(--text2);line-height:1.85;
+  max-width:640px;margin-bottom:2rem;
+}
+
+.hero-actions{display:flex;gap:0.85rem;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:0.45rem;
+  padding:0.65rem 1.4rem;border-radius:9px;
+  font-size:0.875rem;font-weight:700;text-decoration:none;
+  transition:all 0.2s;cursor:pointer;border:none;letter-spacing:0.2px;
+}
+.btn-primary{background:var(--accent);color:#080c18}
+.btn-primary:hover{background:#00f0c0;transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,212,170,0.32)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+
+.hero-stats{
+  display:flex;gap:2.5rem;margin-top:2.5rem;
+  padding-top:2rem;border-top:1px solid var(--border);flex-wrap:wrap;
+}
+.stat-num{font-size:1.7rem;font-weight:900;color:var(--accent);line-height:1}
+.stat-label{font-size:0.75rem;color:var(--text3);margin-top:0.3rem}
+
+/* ─── SECTION WRAPPER ─────────────────── */
+.sw{width:100%}
+.sw:nth-of-type(even){background:var(--bg2)}
+section{padding:80px 2rem;max-width:1100px;margin:0 auto}
+
+.section-label{
+  font-size:0.72rem;font-weight:800;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--accent);margin-bottom:0.4rem;
+}
+.section-title{
+  font-size:clamp(1.7rem,3.5vw,2.1rem);font-weight:900;
+  letter-spacing:-0.5px;color:var(--text);
+}
+.section-sub{margin-top:0.4rem;color:var(--text2);font-size:0.95rem}
+.section-header{margin-bottom:2.5rem}
+
+/* ─── SKILLS ──────────────────────────── */
+.skills-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+  gap:1.1rem;
+}
+.skill-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.35rem;transition:all 0.2s;
+}
+.skill-card:hover{border-color:rgba(0,212,170,0.4);transform:translateY(-2px)}
+.skill-card-title{
+  font-size:0.7rem;font-weight:800;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--accent);
+  margin-bottom:0.9rem;display:flex;align-items:center;gap:0.45rem;
+}
+.skill-tags{display:flex;flex-wrap:wrap;gap:0.4rem}
+.tag{
+  font-size:0.78rem;padding:0.22rem 0.6rem;border-radius:5px;
+  border:1px solid;transition:all 0.15s;
+}
+.tag.lang{color:#f59e0b;border-color:rgba(245,158,11,0.3);background:rgba(245,158,11,0.06)}
+.tag.be  {color:var(--accent);border-color:rgba(0,212,170,0.3);background:rgba(0,212,170,0.06)}
+.tag.fe  {color:#818cf8;border-color:rgba(99,102,241,0.3);background:rgba(99,102,241,0.06)}
+.tag.db  {color:#f472b6;border-color:rgba(236,72,153,0.3);background:rgba(236,72,153,0.06)}
+.tag.cloud{color:#38bdf8;border-color:rgba(14,165,233,0.3);background:rgba(14,165,233,0.06)}
+.tag.devops{color:#fb923c;border-color:rgba(251,146,60,0.3);background:rgba(251,146,60,0.06)}
+.tag.auth{color:#6ee7b7;border-color:rgba(110,231,183,0.3);background:rgba(110,231,183,0.06)}
+.tag.ai  {color:#c084fc;border-color:rgba(192,132,252,0.3);background:rgba(192,132,252,0.06)}
+
+/* ─── PROJECTS ────────────────────────── */
+.filter-row{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:1.75rem}
+.filter-btn{
+  padding:0.28rem 0.85rem;border-radius:99px;font-size:0.78rem;font-weight:700;
+  border:1px solid var(--border);background:transparent;
+  color:var(--text2);cursor:pointer;transition:all 0.2s;
+}
+.filter-btn:hover,.filter-btn.active{
+  background:rgba(0,212,170,0.12);border-color:rgba(0,212,170,0.4);color:var(--accent);
+}
+
+.projects-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:1.1rem;
+}
+.project-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.4rem;
+  display:flex;flex-direction:column;gap:0.7rem;transition:all 0.22s;
+}
+.project-card:hover{border-color:rgba(0,212,170,0.45);transform:translateY(-3px);box-shadow:var(--shadow)}
+
+.project-num{
+  font-size:0.68rem;font-weight:800;color:var(--accent);
+  background:rgba(0,212,170,0.1);padding:0.18rem 0.5rem;
+  border-radius:4px;display:inline-block;margin-bottom:0.4rem;
+}
+.project-name{font-size:1rem;font-weight:800;color:var(--text)}
+.project-sub{font-size:0.78rem;color:var(--accent2);font-weight:600;margin-top:0.1rem}
+.project-role{
+  font-size:0.78rem;color:var(--text3);
+  display:flex;align-items:center;gap:0.4rem;
+}
+.project-role::before{
+  content:'';display:inline-block;width:6px;height:6px;
+  background:var(--accent);border-radius:50%;flex-shrink:0;
+}
+.project-tasks{list-style:none;display:flex;flex-direction:column;gap:0.35rem}
+.project-tasks li{
+  font-size:0.82rem;color:var(--text2);padding-left:1rem;
+  position:relative;line-height:1.55;
+}
+.project-tasks li::before{
+  content:'→';position:absolute;left:0;
+  color:var(--accent);font-size:0.68rem;top:4px;
+}
+.project-stack{
+  display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:auto;
+  padding-top:0.7rem;border-top:1px solid var(--border);
+}
+.stack-tag{
+  font-size:0.7rem;padding:0.13rem 0.48rem;border-radius:4px;
+  background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text3);
+}
+
+/* ─── STRENGTHS ───────────────────────── */
+.strengths-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:1.1rem;
+}
+.strength-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.4rem;
+  position:relative;overflow:hidden;transition:all 0.2s;
+}
+.strength-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+}
+.strength-card:hover{border-color:rgba(0,212,170,0.4);transform:translateY(-2px)}
+.strength-icon{font-size:1.4rem;margin-bottom:0.6rem}
+.strength-title{font-size:0.9rem;font-weight:800;color:var(--text);margin-bottom:0.45rem}
+.strength-desc{font-size:0.82rem;color:var(--text2);line-height:1.7}
+.strength-bar-row{
+  margin-top:1rem;display:flex;align-items:center;gap:0.5rem;font-size:0.72rem;
+}
+.bar-label{color:var(--text3);white-space:nowrap}
+.bar-wrap{flex:1;height:4px;background:var(--bg3);border-radius:99px;overflow:hidden}
+.bar-fill{
+  height:100%;border-radius:99px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width 1.2s ease;
+}
+
+/* ─── ABOUT ───────────────────────────── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+.about-text{font-size:0.975rem;color:var(--text2);line-height:1.9}
+.about-text p+p{margin-top:1.2rem}
+.about-cards{display:flex;flex-direction:column;gap:0.9rem}
+.about-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.1rem 1.3rem;
+  display:flex;gap:0.9rem;align-items:flex-start;transition:border-color 0.2s;
+}
+.about-card:hover{border-color:rgba(0,212,170,0.4)}
+.about-card-icon{font-size:1.3rem;flex-shrink:0;margin-top:0.05rem}
+.about-card-title{font-size:0.87rem;font-weight:800;color:var(--text);margin-bottom:0.2rem}
+.about-card-desc{font-size:0.8rem;color:var(--text2);line-height:1.65}
+
+/* ─── CONTACT / FOOTER ───────────────── */
+footer{
+  border-top:1px solid var(--border);
+  padding:3rem 2rem 2.5rem;text-align:center;
+}
+.footer-name{font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:0.3rem}
+.footer-role{color:var(--text2);font-size:0.875rem;margin-bottom:1.25rem}
+.footer-links{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
+.footer-links a{
+  color:var(--text2);text-decoration:none;font-size:0.85rem;
+  display:flex;align-items:center;gap:0.35rem;transition:color 0.2s;
+}
+.footer-links a:hover{color:var(--accent)}
+.footer-copy{color:var(--text3);font-size:0.78rem}
+
+/* ─── FADE ANIMATIONS ─────────────────── */
+.fi{opacity:0;transform:translateY(18px);transition:opacity 0.65s ease,transform 0.65s ease}
+.fi.visible{opacity:1;transform:translateY(0)}
+
+/* ─── RESPONSIVE ──────────────────────── */
+@media(max-width:768px){
+  nav{padding:0 1rem}
+  .nav-links{
+    display:none;position:fixed;top:60px;left:0;right:0;
+    background:var(--bg2);border-bottom:1px solid var(--border);
+    flex-direction:column;padding:0.75rem;gap:0.15rem;z-index:199;
+  }
+  .nav-links.open{display:flex}
+  .hamburger{display:flex}
+  section{padding:60px 1.25rem}
+  .hero{padding:80px 1.25rem 50px}
+  .hero-stats{gap:1.5rem}
+  .about-grid{grid-template-columns:1fr;gap:2rem}
+  .projects-grid{grid-template-columns:1fr}
+  .skills-grid{grid-template-columns:1fr}
+  .strengths-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .hero-name{font-size:2rem}
+  .hero-actions{flex-direction:column}
+  .btn{justify-content:center}
+  .hero-stats{gap:1.25rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─────────────────────────────────────────── -->
+<nav id="navbar">
+  <a href="#home" class="nav-logo">김정현.dev</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">소개</a></li>
+    <li><a href="#skills">기술스택</a></li>
+    <li><a href="#projects">프로젝트</a></li>
+    <li><a href="#strengths">강점</a></li>
+    <li><a href="#contact">연락처</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="메뉴" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ─── HERO ─────────────────────────────────────────── -->
+<div class="sw" id="home">
+<section class="hero" style="max-width:none;padding-left:max(2rem,calc((100vw - 1100px)/2))">
+  <div class="hero-bg"></div>
+  <div class="hero-content fi">
+    <div class="hero-badge">Open to Work · 2026</div>
+    <h1 class="hero-name">김 정 현<br><span>Backend · Fullstack Developer</span></h1>
+    <p class="hero-title">
+      Spring Boot · Vue.js 3 · Java / Kotlin / Python
+    </p>
+    <p class="hero-desc">
+      10개 이상의 서비스를 기획부터 배포까지 단독으로 개발·운영한 풀스택 개발자입니다.
+      REST API 설계, Vue.js 3 프론트엔드, JWT/OAuth2 인증 시스템, CI/CD 파이프라인 구성까지
+      개발의 전 영역을 직접 담당해 왔습니다.
+    </p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn btn-primary">프로젝트 보기 →</a>
+      <a href="mailto:jhkim@kdrug.org" class="btn btn-outline">연락하기</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">10+</div>
+        <div class="stat-label">직접 개발한 프로젝트</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">7,383</div>
+        <div class="stat-label">단독 설계 프로덕션 코드 (Python)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">Full-Stack</div>
+        <div class="stat-label">BE · FE · DevOps 전 영역</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">SSO · CI/CD</div>
+        <div class="stat-label">인증 시스템 · 자동 배포 직접 구성</div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ─── ABOUT ─────────────────────────────────────────── -->
+<div class="sw" id="about">
+<section>
+  <div class="section-header fi">
+    <div class="section-label">About</div>
+    <h2 class="section-title">소개</h2>
+    <p class="section-sub">기획부터 배포까지 혼자 돌릴 수 있는 풀스택 개발자</p>
+  </div>
+  <div class="about-grid fi">
+    <div class="about-text">
+      <p>Spring Boot + Vue.js 3 기반 풀스택 웹 개발을 주력으로, 다양한 도메인에서
+      10개 이상의 서비스를 기획·설계·배포까지 단독 또는 소규모 팀으로 개발한 경험이 있습니다.</p>
+      <p>백엔드에서는 Spring Security 기반 JWT/OAuth2 SSO 인증 시스템, MyBatis 동적 쿼리,
+      AWS S3 스토리지 연동, 마이크로서비스 분리 설계 등 실무 기술을 폭넓게 적용해 왔습니다.</p>
+      <p>프론트엔드에서는 Vue.js 3 Composition API + Vite 환경에서 PrimeVue, Vuetify,
+      Ant Design Vue 등 다양한 UI 라이브러리를 프로젝트 성격에 맞게 선택·적용해 왔으며,
+      반응형 레이아웃과 실시간 이벤트 처리 경험도 보유하고 있습니다.</p>
+      <p>최근에는 Claude AI와 협업하여 Python 기반 알고리즘 트레이딩 시스템(7,383줄)을
+      단독 설계·운영하며, AI를 설계·구현·리뷰 파트너로 활용하는 개발 방식을 확립했습니다.</p>
+    </div>
+    <div class="about-cards">
+      <div class="about-card">
+        <div class="about-card-icon">🏗️</div>
+        <div>
+          <div class="about-card-title">멀티 서버 아키텍처 설계</div>
+          <div class="about-card-desc">Admin / Web / SSO 등 역할별 서버 분리 설계 경험. 마이크로서비스 분리, 공통 인터페이스 추상화 다수 경험</div>
+        </div>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon">🔐</div>
+        <div>
+          <div class="about-card-title">인증 시스템 단독 설계</div>
+          <div class="about-card-desc">OAuth2 + JWT Access/Refresh Token + Redis 블랙리스트 기반 SSO 서버를 처음부터 혼자 설계·구현</div>
+        </div>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon">🚀</div>
+        <div>
+          <div class="about-card-title">CI/CD 파이프라인 직접 구성</div>
+          <div class="about-card-desc">Gitea 자체 호스팅 + NCP 미러링, dev/prod 브랜치 전략 기반 push 한 번으로 자동 빌드·배포 운영</div>
+        </div>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon">🤖</div>
+        <div>
+          <div class="about-card-title">AI 협업 개발 경험</div>
+          <div class="about-card-desc">Claude AI와 7,383줄 알고리즘 트레이딩 시스템 설계·구현·운영 — 단순 코드 생성이 아닌 전 사이클 AI 파트너십</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ─── SKILLS ─────────────────────────────────────────── -->
+<div class="sw" id="skills">
+<section>
+  <div class="section-header fi">
+    <div class="section-label">Tech Stack</div>
+    <h2 class="section-title">기술 스택</h2>
+    <p class="section-sub">실무에서 직접 사용한 기술들</p>
+  </div>
+  <div class="skills-grid fi">
+    <div class="skill-card">
+      <div class="skill-card-title">🖥️ Language</div>
+      <div class="skill-tags">
+        <span class="tag lang">Java</span>
+        <span class="tag lang">Kotlin</span>
+        <span class="tag lang">Python</span>
+        <span class="tag lang">JavaScript</span>
+        <span class="tag lang">TypeScript</span>
+        <span class="tag lang">SQL</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-title">🔧 Backend</div>
+      <div class="skill-tags">
+        <span class="tag be">Spring Boot</span>
+        <span class="tag be">Spring Security</span>
+        <span class="tag be">Spring AOP</span>
+        <span class="tag be">MyBatis</span>
+        <span class="tag be">JPA / Hibernate</span>
+        <span class="tag be">Swagger / OpenAPI</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-title">🎨 Frontend</div>
+      <div class="skill-tags">
+        <span class="tag fe">Vue.js 3</span>
+        <span class="tag fe">Vite</span>
+        <span class="tag fe">Pinia</span>
+        <span class="tag fe">Vue Router</span>
+        <span class="tag fe">TailwindCSS</span>
+        <span class="tag fe">PrimeVue</span>
+        <span class="tag fe">Vuetify</span>
+        <span class="tag fe">Ant Design Vue</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-title">🗄️ Database</div>
+      <div class="skill-tags">
+        <span class="tag db">MySQL</span>
+        <span class="tag db">Redis</span>
+        <span class="tag db">PostgreSQL</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-title">☁️ Cloud & Infra</div>
+      <div class="skill-tags">
+        <span class="tag cloud">AWS S3</span>
+        <span class="tag cloud">NCLOUD (NCP)</span>
+        <span class="tag cloud">Oracle Cloud</span>
+        <span class="tag cloud">Docker</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-title">🚀 DevOps & CI/CD</div>
+      <div class="skill-tags">
+        <span class="tag devops">Gitea</span>
+        <span class="tag devops">NCP SourcePipeline</span>
+        <span class="tag devops">NCP SourceBuild</span>
+        <span class="tag devops">NCP SourceDeploy</span>
+        <span class="tag devops">Gradle</span>
+        <span class="tag devops">Maven</span>
+        <span class="tag devops">Git</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-title">🔐 Auth & Security</div>
+      <div class="skill-tags">
+        <span class="tag auth">JWT</span>
+        <span class="tag auth">OAuth2</span>
+        <span class="tag auth">Spring Security</span>
+        <span class="tag auth">BCrypt</span>
+        <span class="tag auth">SSO</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-title">🤖 AI & Data</div>
+      <div class="skill-tags">
+        <span class="tag ai">Claude AI</span>
+        <span class="tag ai">Pandas</span>
+        <span class="tag ai">NumPy</span>
+      </div>
+      <p style="margin-top:0.7rem;font-size:0.78rem;color:var(--text3);line-height:1.6">
+        AI 협업 개발 + 데이터 파이프라인·지표 직접 구현 경험
+      </p>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ─── PROJECTS ───────────────────────────────────────── -->
+<div class="sw" id="projects">
+<section>
+  <div class="section-header fi">
+    <div class="section-label">Projects</div>
+    <h2 class="section-title">프로젝트</h2>
+    <p class="section-sub">직접 담당한 10개 프로젝트 · 유지보수 인수 프로젝트 제외</p>
+  </div>
+  <div class="filter-row fi">
+    <button class="filter-btn active" onclick="filterProjects(this,'all')">전체 (10)</button>
+    <button class="filter-btn" onclick="filterProjects(this,'fullstack')">풀스택 (6)</button>
+    <button class="filter-btn" onclick="filterProjects(this,'backend')">백엔드 (2)</button>
+    <button class="filter-btn" onclick="filterProjects(this,'frontend')">프론트엔드 (2)</button>
+    <button class="filter-btn" onclick="filterProjects(this,'python')">Python (1)</button>
+  </div>
+  <div class="projects-grid fi" id="projectsGrid">
+
+    <div class="project-card" data-type="fullstack">
+      <div>
+        <div class="project-num">Project 01</div>
+        <div class="project-name">BPJS — 불용재고 반품 지원 시스템</div>
+        <div class="project-sub">Admin / Web 이중 서버 아키텍처 + CI/CD 파이프라인</div>
+      </div>
+      <div class="project-role">백엔드 · 프론트엔드 · 인프라 단독 개발</div>
+      <ul class="project-tasks">
+        <li>Admin / Web 역할 분리 이중 서버 설계 및 REST API 개발</li>
+        <li>Spring Security + JJWT 기반 JWT 인증/인가 시스템 직접 구현</li>
+        <li>AWS S3 Pre-Signed URL 기반 파일 업로드/다운로드 모듈</li>
+        <li>KafkaJS 기반 실시간 이벤트 수신 처리 (Admin 대시보드)</li>
+        <li>Gitea 자체 호스팅 + NCP 미러링 CI/CD 파이프라인 구성</li>
+        <li>dev/prod 브랜치 전략 — push 한 번으로 환경별 자동 배포</li>
+      </ul>
+      <div class="project-stack">
+        <span class="stack-tag">Spring Boot 2.5</span>
+        <span class="stack-tag">Vue.js 3 + Vite</span>
+        <span class="stack-tag">MySQL</span>
+        <span class="stack-tag">JWT</span>
+        <span class="stack-tag">AWS S3</span>
+        <span class="stack-tag">Gitea</span>
+        <span class="stack-tag">NCP CI/CD</span>
+        <span class="stack-tag">Swagger</span>
+      </div>
+    </div>
+
+    <div class="project-card" data-type="fullstack">
+      <div>
+        <div class="project-num">Project 02</div>
+        <div class="project-name">KIPPA — 의약품 정책 연구소 플랫폼</div>
+        <div class="project-sub">Admin / Web 이중 구조 · 복잡한 관리 화면 설계</div>
+      </div>
+      <div class="project-role">백엔드 · 프론트엔드 단독 개발</div>
+      <ul class="project-tasks">
+        <li>Admin / Web 이중 서버 구조 설계 및 풀스택 개발</li>
+        <li>PrimeVue 3 + Vuetify 3 혼합 — 복잡도 높은 관리 화면 컴포넌트 설계</li>
+        <li>MySQL 스키마 직접 설계 (복합 인덱스, 연관 관계 설계)</li>
+        <li>Spring AOP 기반 공통 로깅 모듈 구현</li>
+        <li>코드 제너레이터 기반 반복 구조 자동 생성으로 개발 속도 단축</li>
+      </ul>
+      <div class="project-stack">
+        <span class="stack-tag">Spring Boot 2.5</span>
+        <span class="stack-tag">Vue.js 3</span>
+        <span class="stack-tag">PrimeVue 3</span>
+        <span class="stack-tag">Vuetify 3</span>
+        <span class="stack-tag">MySQL</span>
+        <span class="stack-tag">JWT</span>
+        <span class="stack-tag">Spring AOP</span>
+      </div>
+    </div>
+
+    <div class="project-card" data-type="backend">
+      <div>
+        <div class="project-num">Project 03</div>
+        <div class="project-name">통합 인증 서버 (KPA SSO)</div>
+        <div class="project-sub">OAuth2 + JWT + Redis 기반 SSO 시스템 단독 설계</div>
+      </div>
+      <div class="project-role">백엔드 단독 설계 · 개발</div>
+      <ul class="project-tasks">
+        <li>Spring Boot 3.2 기반 SSO API 서버 처음부터 단독 설계 및 구현</li>
+        <li>OAuth2 Resource Server 설정 및 전체 인증 흐름 직접 구현</li>
+        <li>JWT Access / Refresh Token 발급 · 갱신 · 폐기 로직 완전 자체 구현</li>
+        <li>Redis 기반 토큰 블랙리스트 · 세션 저장소 — 서버 재시작 시 세션 유지</li>
+        <li>BCrypt 암호화 · 보안 정책 · 예외 처리 통합 적용</li>
+      </ul>
+      <div class="project-stack">
+        <span class="stack-tag">Spring Boot 3.2</span>
+        <span class="stack-tag">Spring Security</span>
+        <span class="stack-tag">OAuth2</span>
+        <span class="stack-tag">JWT</span>
+        <span class="stack-tag">Redis</span>
+        <span class="stack-tag">MySQL</span>
+        <span class="stack-tag">BCrypt</span>
+      </div>
+    </div>
+
+    <div class="project-card" data-type="fullstack">
+      <div>
+        <div class="project-num">Project 04</div>
+        <div class="project-name">pharm114 — 우리동네약국찾기</div>
+        <div class="project-sub">마이크로서비스 분리 · 대용량 약국 데이터 검색 최적화</div>
+      </div>
+      <div class="project-role">백엔드 · 프론트엔드 단독 개발</div>
+      <ul class="project-tasks">
+        <li>대용량 데이터 검색/조회 REST API 서버 개발</li>
+        <li>주소 데이터 전용 서버 분리 — 단일 서버 책임 원칙 적용</li>
+        <li>Ant Design Vue 4 기반 정보 검색 UI 구현</li>
+        <li>수백만 건 데이터 조회를 위한 MyBatis 커서·페이징 쿼리 최적화</li>
+      </ul>
+      <div class="project-stack">
+        <span class="stack-tag">Spring Boot 2.5</span>
+        <span class="stack-tag">Vue.js 3</span>
+        <span class="stack-tag">Ant Design Vue 4</span>
+        <span class="stack-tag">MySQL</span>
+        <span class="stack-tag">Swagger</span>
+        <span class="stack-tag">MyBatis</span>
+      </div>
+    </div>
+
+    <div class="project-card" data-type="fullstack">
+      <div>
+        <div class="project-num">Project 05</div>
+        <div class="project-name">약국 실시간 운영정보 검색 서비스</div>
+        <div class="project-sub">카카오맵 연동 · 공휴일 영업 여부 실시간 조회</div>
+      </div>
+      <div class="project-role">백엔드 · 프론트엔드 단독 개발</div>
+      <ul class="project-tasks">
+        <li>카카오맵 API 연동 약국 위치 검색 UI 개발</li>
+        <li>공공데이터 기반 약국 운영시간 API 서버 개발</li>
+        <li>Redis 스케줄러로 운영정보 주기적 캐싱 처리</li>
+        <li>공휴일 데이터 연동 — 영업 여부 실시간 판단 로직</li>
+      </ul>
+      <div class="project-stack">
+        <span class="stack-tag">Spring Boot 2.5</span>
+        <span class="stack-tag">Vue.js 3</span>
+        <span class="stack-tag">Kakao Map API</span>
+        <span class="stack-tag">Redis</span>
+        <span class="stack-tag">MySQL</span>
+      </div>
+    </div>
+
+    <div class="project-card" data-type="fullstack">
+      <div>
+        <div class="project-num">Project 06</div>
+        <div class="project-name">PAADU — 약바로쓰기운동본부</div>
+        <div class="project-sub">Admin / Front 이중 구조 · S3 파일 스토리지 연동</div>
+      </div>
+      <div class="project-role">백엔드 · 프론트엔드 단독 개발</div>
+      <ul class="project-tasks">
+        <li>Admin / Front 이중 서버 설계 및 풀스택 개발</li>
+        <li>Vue.js 3 Admin / Front 클라이언트 개발</li>
+        <li>AWS S3 연동 파일 업로드 모듈 구현</li>
+      </ul>
+      <div class="project-stack">
+        <span class="stack-tag">Spring Boot 2.5</span>
+        <span class="stack-tag">Vue.js 3</span>
+        <span class="stack-tag">Vite</span>
+        <span class="stack-tag">MySQL</span>
+        <span class="stack-tag">AWS S3</span>
+      </div>
+    </div>
+
+    <div class="project-card" data-type="backend">
+      <div>
+        <div class="project-num">Project 07</div>
+        <div class="project-name">공통 알림 서버</div>
+        <div class="project-sub">멀티 서비스 공유 푸시 알림 공통 인터페이스 설계</div>
+      </div>
+      <div class="project-role">백엔드 단독 설계 · 개발</div>
+      <ul class="project-tasks">
+        <li>여러 서비스가 공유하는 알림 공통 서버 — 서비스별 채널 분리 설계</li>
+        <li>공통 인터페이스 추상화로 신규 서비스 연동 비용 최소화</li>
+      </ul>
+      <div class="project-stack">
+        <span class="stack-tag">Spring Boot 2.5</span>
+        <span class="stack-tag">MySQL</span>
+        <span class="stack-tag">REST API</span>
+      </div>
+    </div>
+
+    <div class="project-card" data-type="frontend">
+      <div>
+        <div class="project-num">Project 08</div>
+        <div class="project-name">온라인 교육 플랫폼 (eduhds)</div>
+        <div class="project-sub">콘텐츠 수강 · 관리 화면 Vue.js 3 개발</div>
+      </div>
+      <div class="project-role">프론트엔드 개발</div>
+      <ul class="project-tasks">
+        <li>온라인 교육 콘텐츠 수강 화면 및 관리자 화면 개발</li>
+        <li>Vue.js 3 Composition API 기반 재사용 컴포넌트 설계</li>
+      </ul>
+      <div class="project-stack">
+        <span class="stack-tag">Vue.js 3</span>
+        <span class="stack-tag">Vite</span>
+        <span class="stack-tag">Spring Boot</span>
+      </div>
+    </div>
+
+    <div class="project-card" data-type="frontend">
+      <div>
+        <div class="project-num">Project 09</div>
+        <div class="project-name">반응형 배너/공지 시스템</div>
+        <div class="project-sub">TailwindCSS 4.x 반응형 UI · 배너 관리 대시보드</div>
+      </div>
+      <div class="project-role">프론트엔드 개발</div>
+      <ul class="project-tasks">
+        <li>TailwindCSS 4.x 기반 배너/공지 관리 UI 개발</li>
+        <li>모바일·태블릿·데스크톱 반응형 레이아웃 설계 및 구현</li>
+      </ul>
+      <div class="project-stack">
+        <span class="stack-tag">Vue.js 3</span>
+        <span class="stack-tag">TailwindCSS 4.x</span>
+        <span class="stack-tag">Vite</span>
+      </div>
+    </div>
+
+    <div class="project-card" data-type="python">
+      <div>
+        <div class="project-num">Project 10</div>
+        <div class="project-name">알고리즘 트레이딩 시스템</div>
+        <div class="project-sub">7,383줄 Python · 자체 설계 · AI 협업 · 실운영</div>
+      </div>
+      <div class="project-role">단독 설계 · 개발 · 운영 (Claude AI 협업)</div>
+      <ul class="project-tasks">
+        <li>7,383줄 프로덕션 코드 · 6개 전략 프로파일 · 100개+ 파라미터 관리</li>
+        <li>4단계 시장 국면 분류 시스템 자체 설계 (알고리즘 직접 구현)</li>
+        <li>RSI · ATR · SMA 등 금융 기술 지표 직접 구현 (라이브러리 미사용)</li>
+        <li>멀티레벨 청산 전략 (TP1/TP2, 트레일링 스탑, 시간 기반 청산)</li>
+        <li>ThreadPoolExecutor 병렬 백테스트 엔진 (MDD, 승률, 기대값 자동 산출)</li>
+        <li>Self-Throttle 리스크 관리 — TP1 실패율 70% 초과 시 자동 RISK_OFF</li>
+      </ul>
+      <div class="project-stack">
+        <span class="stack-tag">Python 3.10+</span>
+        <span class="stack-tag">Pandas</span>
+        <span class="stack-tag">NumPy</span>
+        <span class="stack-tag">Claude AI</span>
+        <span class="stack-tag">ThreadPoolExecutor</span>
+        <span class="stack-tag">JSON 영속화</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+</div>
+
+<!-- ─── STRENGTHS ──────────────────────────────────────── -->
+<div class="sw" id="strengths">
+<section>
+  <div class="section-header fi">
+    <div class="section-label">Strengths</div>
+    <h2 class="section-title">핵심 강점</h2>
+    <p class="section-sub">2026 채용 시장 기준 · 실무 검증 역량</p>
+  </div>
+  <div class="strengths-grid fi">
+    <div class="strength-card">
+      <div class="strength-icon">☕</div>
+      <div class="strength-title">Java/Spring Boot 실전 운영 경험</div>
+      <div class="strength-desc">국내 백엔드 채용공고 70~80%가 요구하는 스택을 10개 이상 서비스 실 운영으로 검증. Spring Boot 2.5.x ↔ 3.2.x 모두 경험. 단순 학습이 아닌 실제 운영 경험.</div>
+      <div class="strength-bar-row">
+        <span class="bar-label">시장 수요</span>
+        <div class="bar-wrap"><div class="bar-fill" data-w="90"></div></div>
+        <span style="color:var(--accent);font-weight:700;font-size:0.72rem">매우 높음</span>
+      </div>
+    </div>
+    <div class="strength-card">
+      <div class="strength-icon">🎨</div>
+      <div class="strength-title">Vue.js 3 풀스택 가능 — 차별화 포인트</div>
+      <div class="strength-desc">12개 이상 Vue.js 3 클라이언트 직접 개발. 백엔드 지원자 중 Vue.js 3 실전 경험자는 소수. 소규모 팀에서 프론트·백엔드 모두 담당 가능 → 채용 매력도 높음.</div>
+      <div class="strength-bar-row">
+        <span class="bar-label">차별화도</span>
+        <div class="bar-wrap"><div class="bar-fill" data-w="80"></div></div>
+        <span style="color:var(--accent);font-weight:700;font-size:0.72rem">★★★★</span>
+      </div>
+    </div>
+    <div class="strength-card">
+      <div class="strength-icon">🔐</div>
+      <div class="strength-title">인증 시스템 단독 설계 능력</div>
+      <div class="strength-desc">OAuth2 Resource Server + JWT Access/Refresh + Redis 블랙리스트 기반 SSO 서버를 처음부터 단독 설계·구현. 면접에서 "인증 흐름 설명해보세요"에 코드 단위로 답변 가능.</div>
+      <div class="strength-bar-row">
+        <span class="bar-label">검증 깊이</span>
+        <div class="bar-wrap"><div class="bar-fill" data-w="85"></div></div>
+        <span style="color:var(--accent);font-weight:700;font-size:0.72rem">구현 단위</span>
+      </div>
+    </div>
+    <div class="strength-card">
+      <div class="strength-icon">🤖</div>
+      <div class="strength-title">AI 협업 개발 — 2026 실전 경험</div>
+      <div class="strength-desc">Claude AI와 7,383줄 프로덕션 시스템 설계·구현·운영. "AI 써봤어요"가 아닌 실운영 경험. 면접에서 "AI 어떻게 활용하세요?" 질문에 구체적 수치와 사례로 답변 가능.</div>
+      <div class="strength-bar-row">
+        <span class="bar-label">2026 트렌드</span>
+        <div class="bar-wrap"><div class="bar-fill" data-w="88"></div></div>
+        <span style="color:var(--accent);font-weight:700;font-size:0.72rem">급부상</span>
+      </div>
+    </div>
+    <div class="strength-card">
+      <div class="strength-icon">🚀</div>
+      <div class="strength-title">CI/CD 파이프라인 직접 구성 · 운영</div>
+      <div class="strength-desc">Gitea 자체 호스팅 Git 서버 운영 + NCP SourcePipeline 브랜치 기반 자동 배포. dev/prod 환경 분리, push 한 번으로 완전 자동 배포 파이프라인 직접 설계·운영.</div>
+      <div class="strength-bar-row">
+        <span class="bar-label">시장 수요</span>
+        <div class="bar-wrap"><div class="bar-fill" data-w="82"></div></div>
+        <span style="color:var(--accent);font-weight:700;font-size:0.72rem">필수화</span>
+      </div>
+    </div>
+    <div class="strength-card">
+      <div class="strength-icon">⚡</div>
+      <div class="strength-title">빠른 도메인 적응력 + 생산성 설계</div>
+      <div class="strength-desc">플랫폼, 교육, 검색, 금융 등 다양한 도메인에서 단독 개발 경험. Coders 제너레이터 기반 반복 자동화로 개발 생산성 직접 설계 — 신규 도메인 온보딩 빠름.</div>
+      <div class="strength-bar-row">
+        <span class="bar-label">범용성</span>
+        <div class="bar-wrap"><div class="bar-fill" data-w="75"></div></div>
+        <span style="color:var(--accent);font-weight:700;font-size:0.72rem">광범위</span>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ─── FOOTER / CONTACT ───────────────────────────────── -->
+<footer id="contact">
+  <div class="footer-name">김정현 · Kim Jeonghyeon</div>
+  <div class="footer-role">Backend · Fullstack Developer</div>
+  <div class="footer-links">
+    <a href="mailto:jhkim@kdrug.org">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      jhkim@kdrug.org
+    </a>
+  </div>
+  <div class="footer-copy">© 2026 김정현 &nbsp;·&nbsp; Built with Claude AI</div>
+</footer>
+
+<script>
+function toggleNav(){
+  document.getElementById('navLinks').classList.toggle('open');
+}
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'));
+});
+
+const navSections = ['home','about','skills','projects','strengths','contact'];
+const navA = document.querySelectorAll('.nav-links a');
+const ioNav = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      navA.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#'+e.target.id);
+      });
+    }
+  });
+}, {threshold:0.35});
+navSections.forEach(id => {
+  const el = document.getElementById(id);
+  if(el) ioNav.observe(el);
+});
+
+const ioFade = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold:0.08});
+document.querySelectorAll('.fi').forEach(el => ioFade.observe(el));
+
+const ioBar = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.bar-fill').forEach(b => {
+        b.style.width = b.dataset.w + '%';
+      });
+    }
+  });
+}, {threshold:0.3});
+document.querySelectorAll('.strength-card').forEach(c => {
+  c.querySelectorAll('.bar-fill').forEach(b => { b.style.width = '0'; });
+  ioBar.observe(c);
+});
+
+function filterProjects(btn, type){
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.project-card').forEach(c => {
+    c.style.display = (type === 'all' || c.dataset.type === type) ? 'flex' : 'none';
+  });
+}
+</script>
+</body>
+</html>
